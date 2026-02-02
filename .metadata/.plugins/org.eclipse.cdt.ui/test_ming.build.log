@@ -1,0 +1,10 @@
+19:46:12 **** Incremental Build of configuration Release for project test_ming ****
+make all 
+'Building target: test_ming'
+'Invoking: Cross GCC Linker'
+gcc  -o "test_ming" ./main.o   
+'Finished building target: test_ming'
+' '
+
+19:46:12 Build Finished. 0 errors, 0 warnings. (took 359ms)
+

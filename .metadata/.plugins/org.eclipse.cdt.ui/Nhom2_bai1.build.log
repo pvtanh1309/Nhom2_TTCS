@@ -1,0 +1,23 @@
+08:54:40 **** Incremental Build of configuration Debug for project Nhom2_bai1 ****
+make -j12 all 
+arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -x assembler-with-cpp -MMD -MP -MF"Startup/startup_stm32f401retx.d" -MT"Startup/startup_stm32f401retx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Startup/startup_stm32f401retx.o" "../Startup/startup_stm32f401retx.s"
+arm-none-eabi-gcc "../Src/bai2.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DNUCLEO_F401RE -DSTM32 -DSTM32F401RETx -DSTM32F4 -c -I../Inc -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Src/bai2.d" -MT"Src/bai2.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/bai2.o"
+arm-none-eabi-gcc "../Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DNUCLEO_F401RE -DSTM32 -DSTM32F401RETx -DSTM32F4 -c -I../Inc -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Src/syscalls.d" -MT"Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/syscalls.o"
+arm-none-eabi-gcc "../Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DNUCLEO_F401RE -DSTM32 -DSTM32F401RETx -DSTM32F4 -c -I../Inc -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Src/sysmem.d" -MT"Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/sysmem.o"
+arm-none-eabi-gcc -o "Nhom2_bai1.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\TUAN ANH\STM32CubeIDE\workspace_1.7.0\Day4\Nhom2_bai1\STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Nhom2_bai1.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Nhom2_bai1.elf
+ 
+arm-none-eabi-size   Nhom2_bai1.elf 
+arm-none-eabi-objdump -h -S  Nhom2_bai1.elf  > "Nhom2_bai1.list"
+arm-none-eabi-objcopy  -O binary  Nhom2_bai1.elf  "Nhom2_bai1.bin"
+   text	   data	    bss	    dec	    hex	filename
+    820	      8	   1568	   2396	    95c	Nhom2_bai1.elf
+Finished building: default.size.stdout
+ 
+Finished building: Nhom2_bai1.bin
+Finished building: Nhom2_bai1.list
+ 
+ 
+
+08:54:40 Build Finished. 0 errors, 0 warnings. (took 411ms)
+
