@@ -1,0 +1,6 @@
+bai2.c:82:5:main	16	static
+bai2.c:109:8:delay	16	static
+bai2.c:120:15:buzzer_Init	16	static
+bai2.c:149:15:button_Init	16	static
+bai2.c:180:15:buzzerControlSetStatus	16	static
+bai2.c:198:13:buttonReadStatus	24	static
