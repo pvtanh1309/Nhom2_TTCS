@@ -39,11 +39,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_line   0000205b  00000000  00000000  00023c41  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    0003b961  00000000  00000000  00025c9c  2**0
+ 18 .debug_str    0003b97a  00000000  00000000  00025c9c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      000000ce  00000000  00000000  000615fd  2**0
+ 19 .comment      000000ce  00000000  00000000  00061616  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00000b40  00000000  00000000  000616cc  2**2
+ 20 .debug_frame  00000b40  00000000  00000000  000616e4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -331,16 +331,16 @@ void RCC_AHB1PeriphClockCmd(uint32_t RCC_AHB1Periph, FunctionalState NewState)
  8000320:	40023800 	.word	0x40023800
 
 08000324 <delay>:
-#define BUTTON_GPIO_PORT					GPIOC
-#define BUTTON_GPIO_PIN						GPIO_Pin_13
-#define BUTTON_PIN13						13
-#define BUTTONControl_SetClock				RCC_AHB1Periph_GPIOC
+#define BUTTON_GPIO_PORT					GPIOB
+#define BUTTON_GPIO_PIN						GPIO_Pin_3
+#define BUTTON_PIN3							3
+#define BUTTONControl_SetClock				RCC_AHB1Periph_GPIOB
 
 void delay() {
  8000324:	b480      	push	{r7}
  8000326:	b083      	sub	sp, #12
  8000328:	af00      	add	r7, sp, #0
-	for (uint32_t i = 0; i < 500000; i++);
+	for (uint32_t i = 0; i < 500000; i++)
  800032a:	2300      	movs	r3, #0
  800032c:	607b      	str	r3, [r7, #4]
  800032e:	e002      	b.n	8000336 <delay+0x12>
@@ -351,6 +351,7 @@ void delay() {
  8000338:	4a04      	ldr	r2, [pc, #16]	; (800034c <delay+0x28>)
  800033a:	4293      	cmp	r3, r2
  800033c:	d9f8      	bls.n	8000330 <delay+0xc>
+		;
 }
  800033e:	bf00      	nop
  8000340:	bf00      	nop
@@ -360,8 +361,8 @@ void delay() {
  800034a:	4770      	bx	lr
  800034c:	0007a11f 	.word	0x0007a11f
 
-08000350 <Led_init>:
-static void Led_init(void) {
+08000350 <LEDRED_init>:
+static void LEDRED_init(void) {
  8000350:	b580      	push	{r7, lr}
  8000352:	b082      	sub	sp, #8
  8000354:	af00      	add	r7, sp, #0
@@ -369,113 +370,114 @@ static void Led_init(void) {
 	GPIO_InitTypeDef GPIO_InitStructure;
 
 	// Cap xung clock hoat dong cho port A
-	RCC_AHB1PeriphClockCmd(LEDControl_SetClock, ENABLE);
+	RCC_AHB1PeriphClockCmd(LEDREDControl_SetClock, ENABLE);
  8000356:	2101      	movs	r1, #1
- 8000358:	2001      	movs	r0, #1
+ 8000358:	2002      	movs	r0, #2
  800035a:	f7ff ffc3 	bl	80002e4 <RCC_AHB1PeriphClockCmd>
 
 	// chon chan su dung chuc nang dieu khien led
 
-	GPIO_InitStructure.GPIO_Pin = LED_GPIO_PIN;
- 800035e:	2320      	movs	r3, #32
- 8000360:	603b      	str	r3, [r7, #0]
+	GPIO_InitStructure.GPIO_Pin = LEDRED_GPIO_PIN;
+ 800035e:	f44f 5300 	mov.w	r3, #8192	; 0x2000
+ 8000362:	603b      	str	r3, [r7, #0]
 
 	//Chon chan dieu khien led che do output
 
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
- 8000362:	2301      	movs	r3, #1
- 8000364:	713b      	strb	r3, [r7, #4]
+ 8000364:	2301      	movs	r3, #1
+ 8000366:	713b      	strb	r3, [r7, #4]
 
 	// Toc do xu ly
 
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
- 8000366:	2302      	movs	r3, #2
- 8000368:	717b      	strb	r3, [r7, #5]
+ 8000368:	2302      	movs	r3, #2
+ 800036a:	717b      	strb	r3, [r7, #5]
 
 	// PUSH PULL
 
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
- 800036a:	2300      	movs	r3, #0
- 800036c:	71bb      	strb	r3, [r7, #6]
+ 800036c:	2300      	movs	r3, #0
+ 800036e:	71bb      	strb	r3, [r7, #6]
 
 	// trang thai ban dau tren chan la Pull down
 
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
- 800036e:	2301      	movs	r3, #1
- 8000370:	71fb      	strb	r3, [r7, #7]
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+ 8000370:	2302      	movs	r3, #2
+ 8000372:	71fb      	strb	r3, [r7, #7]
 
 	// khoi tao cac gia tri
 
-	GPIO_Init(LED_GPIO_PORT, &GPIO_InitStructure);
- 8000372:	463b      	mov	r3, r7
- 8000374:	4619      	mov	r1, r3
- 8000376:	4803      	ldr	r0, [pc, #12]	; (8000384 <Led_init+0x34>)
- 8000378:	f000 f8af 	bl	80004da <GPIO_Init>
+	GPIO_Init(LEDRED_GPIO_PORT, &GPIO_InitStructure);
+ 8000374:	463b      	mov	r3, r7
+ 8000376:	4619      	mov	r1, r3
+ 8000378:	4803      	ldr	r0, [pc, #12]	; (8000388 <LEDRED_init+0x38>)
+ 800037a:	f000 f8ae 	bl	80004da <GPIO_Init>
 
 }
- 800037c:	bf00      	nop
- 800037e:	3708      	adds	r7, #8
- 8000380:	46bd      	mov	sp, r7
- 8000382:	bd80      	pop	{r7, pc}
- 8000384:	40020000 	.word	0x40020000
+ 800037e:	bf00      	nop
+ 8000380:	3708      	adds	r7, #8
+ 8000382:	46bd      	mov	sp, r7
+ 8000384:	bd80      	pop	{r7, pc}
+ 8000386:	bf00      	nop
+ 8000388:	40020400 	.word	0x40020400
 
-08000388 <Button_init>:
+0800038c <Button_init>:
 static void Button_init(void) {
- 8000388:	b580      	push	{r7, lr}
- 800038a:	b082      	sub	sp, #8
- 800038c:	af00      	add	r7, sp, #0
-	// Khai báo biến thuộc kiểu struct
+ 800038c:	b580      	push	{r7, lr}
+ 800038e:	b082      	sub	sp, #8
+ 8000390:	af00      	add	r7, sp, #0
+	// Khai bao bien thuoc kieu struct
 	GPIO_InitTypeDef GPIO_InitStructure;
 
-	// Cấp xung clock hoạt động cho PORT A
+	// Cap xung clock hoat dong cho port A
 
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
- 800038e:	2101      	movs	r1, #1
- 8000390:	2001      	movs	r0, #1
- 8000392:	f7ff ffa7 	bl	80002e4 <RCC_AHB1PeriphClockCmd>
+	RCC_AHB1PeriphClockCmd(BUTTONControl_SetClock, ENABLE);
+ 8000392:	2101      	movs	r1, #1
+ 8000394:	2002      	movs	r0, #2
+ 8000396:	f7ff ffa5 	bl	80002e4 <RCC_AHB1PeriphClockCmd>
 
 	// chon chan su dung chuc nang dieu khien nut nhan
 
 	GPIO_InitStructure.GPIO_Pin = BUTTON_GPIO_PIN;
- 8000396:	f44f 5300 	mov.w	r3, #8192	; 0x2000
- 800039a:	603b      	str	r3, [r7, #0]
+ 800039a:	2308      	movs	r3, #8
+ 800039c:	603b      	str	r3, [r7, #0]
 
 	//Chon chan dieu khien nut che do output
 
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
- 800039c:	2300      	movs	r3, #0
- 800039e:	713b      	strb	r3, [r7, #4]
+ 800039e:	2300      	movs	r3, #0
+ 80003a0:	713b      	strb	r3, [r7, #4]
 
 	// Toc do xu ly
 
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
- 80003a0:	2302      	movs	r3, #2
- 80003a2:	717b      	strb	r3, [r7, #5]
+ 80003a2:	2302      	movs	r3, #2
+ 80003a4:	717b      	strb	r3, [r7, #5]
+	// speed càng cao xung càng cao thì xung càng thoải
 
 	// trang thai ban dau tren chan la Pull up
 
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
- 80003a4:	2301      	movs	r3, #1
- 80003a6:	71fb      	strb	r3, [r7, #7]
+ 80003a6:	2301      	movs	r3, #1
+ 80003a8:	71fb      	strb	r3, [r7, #7]
 
 	// khoi tao cac gia tri
 
 	GPIO_Init(BUTTON_GPIO_PORT, &GPIO_InitStructure);
- 80003a8:	463b      	mov	r3, r7
- 80003aa:	4619      	mov	r1, r3
- 80003ac:	4803      	ldr	r0, [pc, #12]	; (80003bc <Button_init+0x34>)
- 80003ae:	f000 f894 	bl	80004da <GPIO_Init>
+ 80003aa:	463b      	mov	r3, r7
+ 80003ac:	4619      	mov	r1, r3
+ 80003ae:	4803      	ldr	r0, [pc, #12]	; (80003bc <Button_init+0x30>)
+ 80003b0:	f000 f893 	bl	80004da <GPIO_Init>
 }
- 80003b2:	bf00      	nop
- 80003b4:	3708      	adds	r7, #8
- 80003b6:	46bd      	mov	sp, r7
- 80003b8:	bd80      	pop	{r7, pc}
- 80003ba:	bf00      	nop
- 80003bc:	40020800 	.word	0x40020800
+ 80003b4:	bf00      	nop
+ 80003b6:	3708      	adds	r7, #8
+ 80003b8:	46bd      	mov	sp, r7
+ 80003ba:	bd80      	pop	{r7, pc}
+ 80003bc:	40020400 	.word	0x40020400
 
-080003c0 <LedControl_SetStatus>:
+080003c0 <LEDREDControl_SetStatus>:
 
-static void LedControl_SetStatus(GPIO_TypeDef *GPIOx, uint16_t GPIO_PIN,
+static void LEDREDControl_SetStatus(GPIO_TypeDef *GPIOx, uint16_t GPIO_PIN,
 		uint8_t Status) {
  80003c0:	b480      	push	{r7}
  80003c2:	b083      	sub	sp, #12
@@ -490,7 +492,7 @@ static void LedControl_SetStatus(GPIO_TypeDef *GPIOx, uint16_t GPIO_PIN,
 	if (Status == GPIO_PIN_SET) {
  80003d0:	787b      	ldrb	r3, [r7, #1]
  80003d2:	2b01      	cmp	r3, #1
- 80003d4:	d102      	bne.n	80003dc <LedControl_SetStatus+0x1c>
+ 80003d4:	d102      	bne.n	80003dc <LEDREDControl_SetStatus+0x1c>
 		GPIOx->BSRRL = GPIO_PIN;
  80003d6:	687b      	ldr	r3, [r7, #4]
  80003d8:	887a      	ldrh	r2, [r7, #2]
@@ -499,7 +501,7 @@ static void LedControl_SetStatus(GPIO_TypeDef *GPIOx, uint16_t GPIO_PIN,
 	if (Status == GPIO_PIN_RESET) {
  80003dc:	787b      	ldrb	r3, [r7, #1]
  80003de:	2b00      	cmp	r3, #0
- 80003e0:	d102      	bne.n	80003e8 <LedControl_SetStatus+0x28>
+ 80003e0:	d102      	bne.n	80003e8 <LEDREDControl_SetStatus+0x28>
 		GPIOx->BSRRH = GPIO_PIN;
  80003e2:	687b      	ldr	r3, [r7, #4]
  80003e4:	887a      	ldrh	r2, [r7, #2]
@@ -558,52 +560,52 @@ int main(void) {
 	uint8_t status = 1;
  800042e:	2301      	movs	r3, #1
  8000430:	71fb      	strb	r3, [r7, #7]
-	Led_init();
- 8000432:	f7ff ff8d 	bl	8000350 <Led_init>
+	LEDRED_init();
+ 8000432:	f7ff ff8d 	bl	8000350 <LEDRED_init>
 	Button_init();
- 8000436:	f7ff ffa7 	bl	8000388 <Button_init>
+ 8000436:	f7ff ffa9 	bl	800038c <Button_init>
 	while (1) {
 
 		if (ButtonRead_Status(BUTTON_GPIO_PORT, BUTTON_GPIO_PIN) == BTN_PRESS) {
- 800043a:	f44f 5100 	mov.w	r1, #8192	; 0x2000
- 800043e:	4810      	ldr	r0, [pc, #64]	; (8000480 <main+0x58>)
- 8000440:	f7ff ffd8 	bl	80003f4 <ButtonRead_Status>
- 8000444:	4603      	mov	r3, r0
- 8000446:	2b00      	cmp	r3, #0
- 8000448:	d104      	bne.n	8000454 <main+0x2c>
+ 800043a:	2108      	movs	r1, #8
+ 800043c:	4811      	ldr	r0, [pc, #68]	; (8000484 <main+0x5c>)
+ 800043e:	f7ff ffd9 	bl	80003f4 <ButtonRead_Status>
+ 8000442:	4603      	mov	r3, r0
+ 8000444:	2b00      	cmp	r3, #0
+ 8000446:	d104      	bne.n	8000452 <main+0x2a>
 			delay();
- 800044a:	f7ff ff6b 	bl	8000324 <delay>
+ 8000448:	f7ff ff6c 	bl	8000324 <delay>
 			status++;
- 800044e:	79fb      	ldrb	r3, [r7, #7]
- 8000450:	3301      	adds	r3, #1
- 8000452:	71fb      	strb	r3, [r7, #7]
+ 800044c:	79fb      	ldrb	r3, [r7, #7]
+ 800044e:	3301      	adds	r3, #1
+ 8000450:	71fb      	strb	r3, [r7, #7]
 		}
 		if (status % 2 == 0) {
- 8000454:	79fb      	ldrb	r3, [r7, #7]
- 8000456:	f003 0301 	and.w	r3, r3, #1
- 800045a:	b2db      	uxtb	r3, r3
- 800045c:	2b00      	cmp	r3, #0
- 800045e:	d107      	bne.n	8000470 <main+0x48>
+ 8000452:	79fb      	ldrb	r3, [r7, #7]
+ 8000454:	f003 0301 	and.w	r3, r3, #1
+ 8000458:	b2db      	uxtb	r3, r3
+ 800045a:	2b00      	cmp	r3, #0
+ 800045c:	d108      	bne.n	8000470 <main+0x48>
 			delay();
- 8000460:	f7ff ff60 	bl	8000324 <delay>
-			LedControl_SetStatus(LED_GPIO_PORT, LED_GPIO_PIN, GPIO_PIN_HIGH);
- 8000464:	2201      	movs	r2, #1
- 8000466:	2120      	movs	r1, #32
+ 800045e:	f7ff ff61 	bl	8000324 <delay>
+			LEDREDControl_SetStatus(LEDRED_GPIO_PORT, LEDRED_GPIO_PIN, GPIO_PIN_HIGH);
+ 8000462:	2201      	movs	r2, #1
+ 8000464:	f44f 5100 	mov.w	r1, #8192	; 0x2000
  8000468:	4806      	ldr	r0, [pc, #24]	; (8000484 <main+0x5c>)
- 800046a:	f7ff ffa9 	bl	80003c0 <LedControl_SetStatus>
+ 800046a:	f7ff ffa9 	bl	80003c0 <LEDREDControl_SetStatus>
  800046e:	e7e4      	b.n	800043a <main+0x12>
 		} else {
 			delay();
  8000470:	f7ff ff58 	bl	8000324 <delay>
-			LedControl_SetStatus(LED_GPIO_PORT, LED_GPIO_PIN, GPIO_PIN_LOW);
+			LEDREDControl_SetStatus(LEDRED_GPIO_PORT, LEDRED_GPIO_PIN, GPIO_PIN_LOW);
  8000474:	2200      	movs	r2, #0
- 8000476:	2120      	movs	r1, #32
- 8000478:	4802      	ldr	r0, [pc, #8]	; (8000484 <main+0x5c>)
- 800047a:	f7ff ffa1 	bl	80003c0 <LedControl_SetStatus>
+ 8000476:	f44f 5100 	mov.w	r1, #8192	; 0x2000
+ 800047a:	4802      	ldr	r0, [pc, #8]	; (8000484 <main+0x5c>)
+ 800047c:	f7ff ffa0 	bl	80003c0 <LEDREDControl_SetStatus>
 		if (ButtonRead_Status(BUTTON_GPIO_PORT, BUTTON_GPIO_PIN) == BTN_PRESS) {
- 800047e:	e7dc      	b.n	800043a <main+0x12>
- 8000480:	40020800 	.word	0x40020800
- 8000484:	40020000 	.word	0x40020000
+ 8000480:	e7db      	b.n	800043a <main+0x12>
+ 8000482:	bf00      	nop
+ 8000484:	40020400 	.word	0x40020400
 
 08000488 <Reset_Handler>:
 

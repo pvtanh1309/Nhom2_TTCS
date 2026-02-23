@@ -1,4 +1,4 @@
-09:37:50 **** Incremental Build of configuration Debug for project Nhom2_GPIO ****
+10:29:35 **** Incremental Build of configuration Debug for project Nhom2_GPIO ****
 make -j12 all 
 arm-none-eabi-size   Nhom2_GPIO.elf 
    text	   data	    bss	    dec	    hex	filename
@@ -6,5 +6,5 @@ arm-none-eabi-size   Nhom2_GPIO.elf
 Finished building: default.size.stdout
  
 
-09:37:50 Build Finished. 0 errors, 0 warnings. (took 163ms)
+10:29:35 Build Finished. 0 errors, 0 warnings. (took 157ms)
 

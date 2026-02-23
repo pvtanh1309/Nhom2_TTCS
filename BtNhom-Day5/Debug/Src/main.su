@@ -1,0 +1,5 @@
+main.c:51:5:main	8	static
+main.c:73:13:mainInit	8	static
+main.c:80:13:led_Init	16	static
+main.c:96:13:buzzer_Init	16	static
+main.c:112:13:buttonB2_Init	16	static

@@ -1,143 +1,85 @@
-/*******************************************************************************
- *
- * Description: Lab1
- * Project name: Bai 1
- *
- *
- * Last Changed By:  $Author: TrungNT $
- * Revision:         $Revision: 1.0 $
- * Last Changed:     $Date: 24/9/2021 $
- *
- ******************************************************************************/
-/**Libraries******************************************************************/
+#include "stm32f401re.h"
+#include "stm32f401re_gpio.h"
+#include "stm32f401re_rcc.h"
 
-#include <stdint.h>
-#include <stm32f401re_gpio.h>
-#include <stm32f401re_rcc.h>
-#define	LOW									0
-#define BTN_PRESS							LOW
-// Define Logic GPIO_PIN
+/* ===================== MACRO ===================== */
+#define LED_PORT        GPIOA
+#define LED_PIN         GPIO_Pin_5
 
-#define GPIO_PIN_SET						1
-#define GPIO_PIN_RESET						0
-#define GPIO_PIN_LOW						0
-#define GPIO_PIN_HIGH						1
+#define BUTTON_PORT     GPIOC
+#define BUTTON_PIN      GPIO_Pin_13
 
-// Define GPIO PIN
+/* ===================== PROTOTYPE ===================== */
+void GPIO_LED_Init(void);
+void GPIO_Button_Init(void);
+void LED_On(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+void LED_Off(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+uint8_t Button_Read(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
-#define LED_GPIO_PORT						GPIOA
-#define LED_GPIO_PIN						GPIO_Pin_5
-#define LED_PIN5							5
-#define LEDControl_SetClock					RCC_AHB1Periph_GPIOA
+/* ===================== MAIN ===================== */
+int main(void)
+{
+    GPIO_LED_Init();
+    GPIO_Button_Init();
 
-#define BUTTON_GPIO_PORT					GPIOC
-#define BUTTON_GPIO_PIN						GPIO_Pin_13
-#define BUTTON_PIN13						13
-#define BUTTONControl_SetClock				RCC_AHB1Periph_GPIOC
-
-void delay() {
-	for (uint32_t i = 0; i < 500000; i++);
-}
-static void Led_init(void) {
-	// Khai bao bien thuoc kieu struct
-	GPIO_InitTypeDef GPIO_InitStructure;
-
-	// Cap xung clock hoat dong cho port A
-	RCC_AHB1PeriphClockCmd(LEDControl_SetClock, ENABLE);
-
-	// chon chan su dung chuc nang dieu khien led
-
-	GPIO_InitStructure.GPIO_Pin = LED_GPIO_PIN;
-
-	//Chon chan dieu khien led che do output
-
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-
-	// Toc do xu ly
-
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-
-	// PUSH PULL
-
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-
-	// trang thai ban dau tren chan la Pull down
-
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-
-	// khoi tao cac gia tri
-
-	GPIO_Init(LED_GPIO_PORT, &GPIO_InitStructure);
-
-}
-static void Button_init(void) {
-	// Khai báo biến thuộc kiểu struct
-	GPIO_InitTypeDef GPIO_InitStructure;
-
-	// Cấp xung clock hoạt động cho PORT A
-
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-
-	// chon chan su dung chuc nang dieu khien nut nhan
-
-	GPIO_InitStructure.GPIO_Pin = BUTTON_GPIO_PIN;
-
-	//Chon chan dieu khien nut che do output
-
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-
-	// Toc do xu ly
-
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-
-	// trang thai ban dau tren chan la Pull up
-
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-
-	// khoi tao cac gia tri
-
-	GPIO_Init(BUTTON_GPIO_PORT, &GPIO_InitStructure);
+    while (1)
+    {
+        /* Nhấn nút PC13 → LED sáng */
+        if (Button_Read(BUTTON_PORT, BUTTON_PIN) == 0)
+        {
+            LED_On(LED_PORT, LED_PIN);
+        }
+        else
+        {
+            LED_Off(LED_PORT, LED_PIN);
+        }
+    }
 }
 
-static void LedControl_SetStatus(GPIO_TypeDef *GPIOx, uint16_t GPIO_PIN,
-		uint8_t Status) {
-	// SET bit in BSRR Registers
+/* ===================== LED INIT ===================== */
+void GPIO_LED_Init(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure;
 
-	if (Status == GPIO_PIN_SET) {
-		GPIOx->BSRRL = GPIO_PIN;
-	}
-	if (Status == GPIO_PIN_RESET) {
-		GPIOx->BSRRH = GPIO_PIN;
-	}
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+
+    GPIO_InitStructure.GPIO_Pin   = LED_PIN;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN;
+
+    GPIO_Init(LED_PORT, &GPIO_InitStructure);
 }
 
-static uint8_t ButtonRead_Status(GPIO_TypeDef *GPIOx, uint16_t GPIO_PIN) {
-	uint8_t Read_Pin = 0x00;
+/* ===================== BUTTON INIT ===================== */
+void GPIO_Button_Init(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure;
 
-	if ((GPIOx->IDR & GPIO_PIN) != (uint32_t) Bit_RESET) {
-		Read_Pin = (uint8_t) Bit_SET;
-	} else {
-		Read_Pin = (uint8_t) Bit_RESET;
-	}
-	return Read_Pin;
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
+
+    GPIO_InitStructure.GPIO_Pin   = BUTTON_PIN;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
+
+    GPIO_Init(BUTTON_PORT, &GPIO_InitStructure);
 }
-int main(void) {
-	uint8_t status = 1;
-	Led_init();
-	Button_init();
-	while (1) {
 
-		if (ButtonRead_Status(BUTTON_GPIO_PORT, BUTTON_GPIO_PIN) == BTN_PRESS) {
-			delay();
-			status++;
-		}
-		if (status % 2 == 0) {
-			delay();
-			LedControl_SetStatus(LED_GPIO_PORT, LED_GPIO_PIN, GPIO_PIN_HIGH);
-		} else {
-			delay();
-			LedControl_SetStatus(LED_GPIO_PORT, LED_GPIO_PIN, GPIO_PIN_LOW);
-		}
-	}
-	return 0;
+/* ===================== LED CONTROL ===================== */
+void LED_On(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
+{
+    GPIOx->BSRRL = GPIO_Pin;
+}
+
+void LED_Off(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
+{
+    GPIOx->BSRRH = GPIO_Pin;
+}
+
+/* ===================== BUTTON READ ===================== */
+uint8_t Button_Read(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
+{
+    return (uint8_t)((GPIOx->IDR >> __builtin_ctz(GPIO_Pin)) & 0x01);
 }

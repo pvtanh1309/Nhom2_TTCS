@@ -49,10 +49,12 @@
 
 #define BUZZER_GPIO_PORT					GPIOC
 #define BUZZER_GPIO_PIN						GPIO_Pin_9
+#define BUZZER_PIN9							9
 #define BUZZERControl_SetClock				RCC_AHB1Periph_GPIOC
 
 #define BUTTON_GPIO_PORT					GPIOB
-#define BUTTON_GPIO_PIN						GPIO_Pin_3
+#define BUTTON_GPIO_PIN						GPIO_Pin_4
+#define BUTTON_B5_PIN						4
 #define BUTTONControl_SetClock				RCC_AHB1Periph_GPIOB
 
 /******************************************************************************/

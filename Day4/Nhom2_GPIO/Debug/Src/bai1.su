@@ -1,6 +1,6 @@
-bai1.c:38:6:delay	16	static
-bai1.c:41:13:Led_init	16	static
-bai1.c:73:13:Button_init	16	static
-bai1.c:102:13:LedControl_SetStatus	16	static
-bai1.c:114:16:ButtonRead_Status	24	static
-bai1.c:124:5:main	16	static
+bai1.c:20:5:main	8	static
+bai1.c:40:6:GPIO_LED_Init	16	static
+bai1.c:56:6:GPIO_Button_Init	16	static
+bai1.c:71:6:LED_On	16	static
+bai1.c:76:6:LED_Off	16	static
+bai1.c:82:9:Button_Read	16	static
