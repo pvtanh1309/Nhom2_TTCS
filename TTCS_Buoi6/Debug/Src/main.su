@@ -1,0 +1,13 @@
+main.c:69:13:GPIO_SPI1_Init	16	static
+main.c:93:13:LED_Init	4	static
+main.c:103:13:LED_On	4	static
+main.c:104:13:LED_Off	4	static
+main.c:106:13:delay_ms	24	static
+main.c:117:13:SPI1_Init	32	static
+main.c:141:20:CS_Low	8	static
+main.c:145:20:CS_High	8	static
+main.c:181:16:SPI_FullDuplex_Byte	24	static
+main.c:221:13:SPI_FullDuplex_Frame	40	static
+main.c:245:16:Buf_Equal	32	static
+main.c:260:13:TxBuf_Next	16	static
+main.c:268:5:main	16	static
